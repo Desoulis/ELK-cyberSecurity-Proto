@@ -1,0 +1,939 @@
+alert:
+- debug
+description: Detects registry keys created in OceanLotus (also known as APT32) attacks
+filter:
+- query:
+    query_string:
+      query: (EventID:"13" AND TargetObject.keyword:(*\\SOFTWARE\\Classes\\CLSID\\\{E08A0F4B\-1F65\-4D4D\-9A09\-BD4625B9C5A1\}\\Model OR *\\SOFTWARE\\App\\AppXbf13d4ea2945444d8b13e2121cb6b663\\Application OR *\\SOFTWARE\\App\\AppXbf13d4ea2945444d8b13e2121cb6b663\\DefaultIcon OR *\\SOFTWARE\\App\\AppX70162486c7554f7f80f481985d67586d\\Application OR *\\SOFTWARE\\App\\AppX70162486c7554f7f80f481985d67586d\\DefaultIcon OR *\\SOFTWARE\\App\\AppX37cc7fdccd644b4f85f4b22d5a3f105a\\Application OR *\\SOFTWARE\\App\\AppX37cc7fdccd644b4f85f4b22d5a3f105a\\DefaultIcon))
+index: logstash-*
+name: 4ac5fc44-a601-4c06-955b-309df8c4e9d4_0
+priority: 1
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects Pandemic Windows Implant
+filter:
+- query:
+    query_string:
+      query: (EventID:"13" AND TargetObject.keyword:(\\REGISTRY\\MACHINE\\SYSTEM\\CurrentControlSet\\services\\null\\Instance* OR \\REGISTRY\\MACHINE\\SYSTEM\\ControlSet001\\services\\null\\Instance* OR \\REGISTRY\\MACHINE\\SYSTEM\\ControlSet002\\services\\null\\Instance*))
+index: logstash-*
+name: 47e0852a-cf81-4494-a8e6-31864f8c86ed_0
+priority: 1
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects Pandemic Windows Implant
+filter:
+- query:
+    query_string:
+      query: Command.keyword:loaddll\ \-a\ *
+index: logstash-*
+name: 47e0852a-cf81-4494-a8e6-31864f8c86ed-2_0
+priority: 1
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects a named pipe used by Turla group samples
+filter:
+- query:
+    query_string:
+      query: (EventID:("17" OR "18") AND PipeName:("\\atctl" OR "\\userpipe" OR "\\iehelper" OR "\\sdlrpc" OR "\\comnap"))
+index: logstash-*
+name: 739915e4-1e70-4778-8b8a-17db02f66db1_0
+priority: 1
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects remote thread creation from CACTUSTORCH as described in references.
+filter:
+- query:
+    query_string:
+      query: (EventID:"8" AND SourceImage.keyword:(*\\System32\\cscript.exe OR *\\System32\\wscript.exe OR *\\System32\\mshta.exe OR *\\winword.exe OR *\\excel.exe) AND TargetImage.keyword:*\\SysWOW64\\* AND NOT _exists_:StartModule)
+index: logstash-*
+name: 2e4e488a-6164-4811-9ea1-f960c7359c40_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects various indicators of Microsoft Connection Manager Profile Installer execution
+filter:
+- query:
+    query_string:
+      query: ((EventID:"12" AND TargetObject.keyword:*\\cmmgr32.exe*) OR (EventID:"13" AND TargetObject.keyword:*\\cmmgr32.exe*) OR (EventID:"10" AND CallTrace.keyword:*cmlua.dll*))
+index: logstash-*
+name: 9d26fede-b526-4413-b069-6e24b6d07167_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects various indicators of Microsoft Connection Manager Profile Installer execution
+filter:
+- query:
+    query_string:
+      query: ParentImage.keyword:*\\cmstp.exe
+index: logstash-*
+name: 9d26fede-b526-4413-b069-6e24b6d07167-2_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects a possible remote threat creation with certain characteristics which are typical for Cobalt Strike beacons
+filter:
+- query:
+    query_string:
+      query: (EventID:"8" AND TargetProcessAddress.keyword:(*0B80 OR *0C7C OR *0C88))
+index: logstash-*
+name: 6309645e-122d-4c5b-bb2b-22e4f9c2fa42_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects the installation of a Callout DLL via CalloutDlls and CalloutEnabled parameter in Registry, which can be used to execute code in context of the DHCP server (restart required)
+filter:
+- query:
+    query_string:
+      query: (EventID:"13" AND TargetObject.keyword:(*\\Services\\DHCPServer\\Parameters\\CalloutDlls OR *\\Services\\DHCPServer\\Parameters\\CalloutEnabled))
+index: logstash-*
+name: 9d3436ef-9476-4c43-acca-90ce06bdf33a_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects the installation of a plugin DLL via ServerLevelPluginDll parameter in Registry, which can be used to execute code in context of the DNS server (restart required)
+filter:
+- query:
+    query_string:
+      query: (EventID:"13" AND TargetObject.keyword:*\\services\\DNS\\Parameters\\ServerLevelPluginDll)
+index: logstash-*
+name: e61e8a88-59a9-451c-874e-70fcc9740d67_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects the installation of a plugin DLL via ServerLevelPluginDll parameter in Registry, which can be used to execute code in context of the DNS server (restart required)
+filter:
+- query:
+    query_string:
+      query: CommandLine.keyword:dnscmd.exe\ \/config\ \/serverlevelplugindll\ *
+index: logstash-*
+name: e61e8a88-59a9-451c-874e-70fcc9740d67-2_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects possible SafetyKatz Behaviour
+filter:
+- query:
+    query_string:
+      query: (EventID:"11" AND TargetFilename.keyword:*\\Temp\\debug.bin)
+index: logstash-*
+name: e074832a-eada-4fd7-94a1-10642b130e16_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects the use of Dumpert process dumper, which dumps the lsass.exe process memory
+filter:
+- query:
+    query_string:
+      query: Imphash:"09D278F9DE118EF09163C6140255C690"
+index: logstash-*
+name: 2704ab9e-afe2-4854-a3b1-0c0706d03578_0
+priority: 1
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects the use of Dumpert process dumper, which dumps the lsass.exe process memory
+filter:
+- query:
+    query_string:
+      query: (EventID:"11" AND TargetFilename:"C\:\\Windows\\Temp\\dumpert.dmp")
+index: logstash-*
+name: 2704ab9e-afe2-4854-a3b1-0c0706d03578-2_0
+priority: 1
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects the use of Windows Credential Editor (WCE)
+filter:
+- query:
+    query_string:
+      query: (Imphash:("a53a02b997935fd8eedcb5f7abab9b9f" OR "e96a73c7bf33a464c510ede582318bf2") OR (CommandLine.keyword:*.exe\ \-S AND ParentImage.keyword:*\\services.exe))
+index: logstash-*
+name: 7aa7009a-28b9-4344-8c1f-159489a390df_0
+priority: 1
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects the use of Windows Credential Editor (WCE)
+filter:
+- query:
+    query_string:
+      query: (EventID:"13" AND TargetObject.keyword:*Services\\WCESERVICE\\Start*)
+index: logstash-*
+name: 7aa7009a-28b9-4344-8c1f-159489a390df-2_0
+priority: 1
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects suspect access to svchost process memory such as that used by Invoke-Phantom to kill the winRM windows event logging service.
+filter:
+- query:
+    query_string:
+      query: (EventID:"10" AND TargetImage.keyword:*\\windows\\system32\\svchost.exe AND GrantedAccess:"0x1f3fff" AND CallTrace.keyword:(*unknown*))
+index: logstash-*
+name: 166e9c50-8cd9-44af-815d-d1f0c0e90dde_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects creation or execution of UserInitMprLogonScript persistence method
+filter:
+- query:
+    query_string:
+      query: ((ParentImage.keyword:*\\userinit.exe AND (NOT (Image.keyword:*\\explorer.exe))) AND (NOT (CommandLine.keyword:(*\\netlogon.bat OR *\\UsrLogon.cmd))))
+index: logstash-*
+name: 0a98a10c-685d-4ab0-bddc-b6bdd1d48458_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects creation or execution of UserInitMprLogonScript persistence method
+filter:
+- query:
+    query_string:
+      query: CommandLine.keyword:*UserInitMprLogonScript*
+index: logstash-*
+name: 0a98a10c-685d-4ab0-bddc-b6bdd1d48458-2_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects creation or execution of UserInitMprLogonScript persistence method
+filter:
+- query:
+    query_string:
+      query: (EventID:("11" OR "12" OR "13" OR "14") AND TargetObject.keyword:*UserInitMprLogonScript*)
+index: logstash-*
+name: 0a98a10c-685d-4ab0-bddc-b6bdd1d48458-3_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects process LSASS memory dump using procdump or taskmgr based on the CallTrace pointing to dbghelp.dll or dbgcore.dll for win10
+filter:
+- query:
+    query_string:
+      query: (EventID:"10" AND TargetImage:"C\:\\windows\\system32\\lsass.exe" AND GrantedAccess:"0x1fffff" AND CallTrace.keyword:(*dbghelp.dll* OR *dbgcore.dll*))
+index: logstash-*
+name: 5ef9853e-4d0e-4a70-846f-a9ca37d876da_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects programs that connect to typical malware back connect ports based on statistical analysis from two different sandbox system databases
+filter:
+- query:
+    query_string:
+      query: ((EventID:"3" AND Initiated:"true" AND DestinationPort:("4443" OR "2448" OR "8143" OR "1777" OR "1443" OR "243" OR "65535" OR "13506" OR "3360" OR "200" OR "198" OR "49180" OR "13507" OR "6625" OR "4444" OR "4438" OR "1904" OR "13505" OR "13504" OR "12102" OR "9631" OR "5445" OR "2443" OR "777" OR "13394" OR "13145" OR "12103" OR "5552" OR "3939" OR "3675" OR "666" OR "473" OR "5649" OR "4455" OR "4433" OR "1817" OR "100" OR "65520" OR "1960" OR "1515" OR "743" OR "700" OR "14154" OR "14103" OR "14102" OR "12322" OR "10101" OR "7210" OR "4040" OR "9943")) AND (NOT ((Image.keyword:*\\Program\ Files* OR (DestinationIp.keyword:(10.* OR 192.168.* OR 172.16.* OR 172.17.* OR 172.18.* OR 172.19.* OR 172.20.* OR 172.21.* OR 172.22.* OR 172.23.* OR 172.24.* OR 172.25.* OR 172.26.* OR 172.27.* OR 172.28.* OR 172.29.* OR 172.30.* OR 172.31.* OR 127.*) AND DestinationIsIpv6:"false")))))
+index: logstash-*
+name: 4b89abaa-99fe-4232-afdd-8f9aa4d20382_0
+priority: 3
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects a process access to verclsid.exe that injects shellcode from a Microsoft Office application / VBA macro
+filter:
+- query:
+    query_string:
+      query: ((EventID:"10" AND TargetImage.keyword:*\\verclsid.exe AND GrantedAccess:"0x1FFFFF") AND (CallTrace.keyword:*|UNKNOWN\(*VBE7.DLL* OR (SourceImage.keyword:*\\Microsoft\ Office\\* AND CallTrace.keyword:*|UNKNOWN*)))
+index: logstash-*
+name: b7967e22-3d7e-409b-9ed5-cdae3f9243a1_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects the creation of a named pipe used by known APT malware
+filter:
+- query:
+    query_string:
+      query: (EventID:("17" OR "18") AND PipeName.keyword:(\\isapi_http OR \\isapi_dg OR \\isapi_dg2 OR \\sdlrpc OR \\ahexec OR \\winsession OR \\lsassw OR \\46a676ab7f179e511e30dd2dc41bd388 OR \\9f81f59bc58452127884ce513865ed20 OR \\e710f28d59aa529d6792ca6ff0ca1b34 OR \\rpchlp_3 OR \\NamePipe_MoreWindows OR \\pcheap_reuse OR \\msagent_* OR \\gruntsvc))
+index: logstash-*
+name: fe3ac066-98bb-432a-b1e7-a5229cb39d4a_0
+priority: 1
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects process access to LSASS which is typical for Mimikatz (0x1000 PROCESS_QUERY_ LIMITED_INFORMATION, 0x0400 PROCESS_QUERY_ INFORMATION "only old versions", 0x0010 PROCESS_VM_READ)
+filter:
+- query:
+    query_string:
+      query: (EventID:"10" AND TargetImage:"C\:\\windows\\system32\\lsass.exe" AND GrantedAccess:("0x1410" OR "0x1010"))
+index: logstash-*
+name: 0d894093-71bc-43c3-8c4d-ecfc28dcf5d9_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects usage of mimikatz through WinRM protocol by monitoring access to lsass process by wsmprovhost.exe.
+filter:
+- query:
+    query_string:
+      query: (EventID:"10" AND TargetImage:"C\:\\windows\\system32\\lsass.exe" AND SourceImage:"C\:\\Windows\\system32\\wsmprovhost.exe")
+index: logstash-*
+name: aa35a627-33fb-4d04-a165-d33b4afca3e8_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects password dumper activity by monitoring remote thread creation EventID 8 in combination with the lsass.exe process as TargetImage. The process in field Process is the malicious program. A single execution can lead to hundreds of events.
+filter:
+- query:
+    query_string:
+      query: (EventID:"8" AND TargetImage:"C\:\\Windows\\System32\\lsass.exe" AND NOT _exists_:StartModule)
+index: logstash-*
+name: f239b326-2f41-4d6b-9dfa-c846a60ef505_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects the creation of known powershell scripts for exploitation
+filter:
+- query:
+    query_string:
+      query: (EventID:"11" AND TargetFilename.keyword:(*\\Invoke\-DllInjection.ps1 OR *\\Invoke\-WmiCommand.ps1 OR *\\Get\-GPPPassword.ps1 OR *\\Get\-Keystrokes.ps1 OR *\\Get\-VaultCredential.ps1 OR *\\Invoke\-CredentialInjection.ps1 OR *\\Invoke\-Mimikatz.ps1 OR *\\Invoke\-NinjaCopy.ps1 OR *\\Invoke\-TokenManipulation.ps1 OR *\\Out\-Minidump.ps1 OR *\\VolumeShadowCopyTools.ps1 OR *\\Invoke\-ReflectivePEInjection.ps1 OR *\\Get\-TimedScreenshot.ps1 OR *\\Invoke\-UserHunter.ps1 OR *\\Find\-GPOLocation.ps1 OR *\\Invoke\-ACLScanner.ps1 OR *\\Invoke\-DowngradeAccount.ps1 OR *\\Get\-ServiceUnquoted.ps1 OR *\\Get\-ServiceFilePermission.ps1 OR *\\Get\-ServicePermission.ps1 OR *\\Invoke\-ServiceAbuse.ps1 OR *\\Install\-ServiceBinary.ps1 OR *\\Get\-RegAutoLogon.ps1 OR *\\Get\-VulnAutoRun.ps1 OR *\\Get\-VulnSchTask.ps1 OR *\\Get\-UnattendedInstallFile.ps1 OR *\\Get\-WebConfig.ps1 OR *\\Get\-ApplicationHost.ps1 OR *\\Get\-RegAlwaysInstallElevated.ps1 OR *\\Get\-Unconstrained.ps1 OR *\\Add\-RegBackdoor.ps1 OR *\\Add\-ScrnSaveBackdoor.ps1 OR *\\Gupt\-Backdoor.ps1 OR *\\Invoke\-ADSBackdoor.ps1 OR *\\Enabled\-DuplicateToken.ps1 OR *\\Invoke\-PsUaCme.ps1 OR *\\Remove\-Update.ps1 OR *\\Check\-VM.ps1 OR *\\Get\-LSASecret.ps1 OR *\\Get\-PassHashes.ps1 OR *\\Show\-TargetScreen.ps1 OR *\\Port\-Scan.ps1 OR *\\Invoke\-PoshRatHttp.ps1 OR *\\Invoke\-PowerShellTCP.ps1 OR *\\Invoke\-PowerShellWMI.ps1 OR *\\Add\-Exfiltration.ps1 OR *\\Add\-Persistence.ps1 OR *\\Do\-Exfiltration.ps1 OR *\\Start\-CaptureServer.ps1 OR *\\Invoke\-ShellCode.ps1 OR *\\Get\-ChromeDump.ps1 OR *\\Get\-ClipboardContents.ps1 OR *\\Get\-FoxDump.ps1 OR *\\Get\-IndexedItem.ps1 OR *\\Get\-Screenshot.ps1 OR *\\Invoke\-Inveigh.ps1 OR *\\Invoke\-NetRipper.ps1 OR *\\Invoke\-EgressCheck.ps1 OR *\\Invoke\-PostExfil.ps1 OR *\\Invoke\-PSInject.ps1 OR *\\Invoke\-RunAs.ps1 OR *\\MailRaider.ps1 OR *\\New\-HoneyHash.ps1 OR *\\Set\-MacAttribute.ps1 OR *\\Invoke\-DCSync.ps1 OR *\\Invoke\-PowerDump.ps1 OR *\\Exploit\-Jboss.ps1 OR *\\Invoke\-ThunderStruck.ps1 OR *\\Invoke\-VoiceTroll.ps1 OR *\\Set\-Wallpaper.ps1 OR *\\Invoke\-InveighRelay.ps1 OR *\\Invoke\-PsExec.ps1 OR *\\Invoke\-SSHCommand.ps1 OR *\\Get\-SecurityPackages.ps1 OR *\\Install\-SSP.ps1 OR *\\Invoke\-BackdoorLNK.ps1 OR *\\PowerBreach.ps1 OR *\\Get\-SiteListPassword.ps1 OR *\\Get\-System.ps1 OR *\\Invoke\-BypassUAC.ps1 OR *\\Invoke\-Tater.ps1 OR *\\Invoke\-WScriptBypassUAC.ps1 OR *\\PowerUp.ps1 OR *\\PowerView.ps1 OR *\\Get\-RickAstley.ps1 OR *\\Find\-Fruit.ps1 OR *\\HTTP\-Login.ps1 OR *\\Find\-TrustedDocuments.ps1 OR *\\Invoke\-Paranoia.ps1 OR *\\Invoke\-WinEnum.ps1 OR *\\Invoke\-ARPScan.ps1 OR *\\Invoke\-PortScan.ps1 OR *\\Invoke\-ReverseDNSLookup.ps1 OR *\\Invoke\-SMBScanner.ps1 OR *\\Invoke\-Mimikittenz.ps1))
+index: logstash-*
+name: f331aa1f-8c53-4fc3-b083-cc159bc971cb_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects a Powershell process that opens network connections - check for suspicious target ports and target systems - adjust to your environment (e.g. extend filters with company's ip range')
+filter:
+- query:
+    query_string:
+      query: ((EventID:"3" AND Image.keyword:*\\powershell.exe AND Initiated:"true") AND (NOT (DestinationIp.keyword:(10.* OR 192.168.* OR 172.16.* OR 172.17.* OR 172.18.* OR 172.19.* OR 172.20.* OR 172.21.* OR 172.22.* OR 172.23.* OR 172.24.* OR 172.25.* OR 172.26.* OR 172.27.* OR 172.28.* OR 172.29.* OR 172.30.* OR 172.31.* OR 127.0.0.1) AND DestinationIsIpv6:"false" AND User:"NT\ AUTHORITY\\SYSTEM")))
+index: logstash-*
+name: 1f21ec3f-810d-4b0e-8045-322202e22b4b_0
+priority: 4
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects a dump file written by QuarksPwDump password dumper
+filter:
+- query:
+    query_string:
+      query: (EventID:"11" AND TargetFilename.keyword:*\\AppData\\Local\\Temp\\SAM\-*.dmp*)
+index: logstash-*
+name: 847def9e-924d-4e90-b7c4-5f581395a2b4_0
+priority: 1
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects svchost hosting RDP termsvcs communicating with the loopback address and on TCP port 3389
+filter:
+- query:
+    query_string:
+      query: (EventID:"3" AND Image.keyword:*\\svchost.exe AND Initiated:"true" AND SourcePort:"3389" AND DestinationIp.keyword:(127.* OR \:\:1))
+index: logstash-*
+name: 5f699bc5-5446-4a4a-a0b7-5ef2885a3eb4_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects changes to RDP terminal service sensitive settings
+filter:
+- query:
+    query_string:
+      query: (EventID:"13" AND TargetObject.keyword:(*\\services\\TermService\\Parameters\\ServiceDll* OR *\\Control\\Terminal\ Server\\fSingleSessionPerUser* OR *\\Control\\Terminal\ Server\\fDenyTSConnections*))
+index: logstash-*
+name: 171b67e1-74b4-460e-8d55-b331f3e32d67_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects COM object hijacking via TreatAs subkey
+filter:
+- query:
+    query_string:
+      query: (EventID:"12" AND TargetObject:"HKU\*" AND TargetObject.keyword:*_Classes\\CLSID\* AND TargetObject.keyword:*\\TreatAs)
+index: logstash-*
+name: 9b0f8a61-91b2-464f-aceb-0527e0a45020_0
+priority: 3
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects renamed jusched.exe used by cobalt group
+filter:
+- query:
+    query_string:
+      query: ((Description:"Java\ Update\ Scheduler" OR Description:"Java\(TM\)\ Update\ Scheduler") AND (NOT (Image.keyword:(*\\jusched.exe))))
+index: logstash-*
+name: edd8a48c-1b9f-4ba1-83aa-490338cd1ccb_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects the execution of a renamed PowerShell often used by attackers or malware
+filter:
+- query:
+    query_string:
+      query: ((Description:"Windows\ PowerShell" AND Company:"Microsoft\ Corporation") AND (NOT (Image.keyword:(*\\powershell.exe OR *\\powershell_ise.exe))))
+index: logstash-*
+name: d178a2d7-129a-4ba4-8ee6-d6e1fecd5d20_0
+priority: 1
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects the execution of a renamed ProcDump executable often used by attackers or malware
+filter:
+- query:
+    query_string:
+      query: (OriginalFileName:"procdump" AND (NOT (Image.keyword:(*\\procdump.exe OR *\\procdump64.exe))))
+index: logstash-*
+name: 4a0b2c7e-7cb2-495d-8b63-5f268e7bfd67_0
+priority: 1
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects the execution of a renamed PsExec often used by attackers or malware
+filter:
+- query:
+    query_string:
+      query: ((Description:"Execute\ processes\ remotely" AND Product:"Sysinternals\ PsExec") AND (NOT (Image.keyword:(*\\PsExec.exe OR *\\PsExec64.exe))))
+index: logstash-*
+name: a7a7e0e5-1d57-49df-9c58-9fe5bc0346a2_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects a rundll32 that communicates with public IP addresses
+filter:
+- query:
+    query_string:
+      query: ((EventID:"3" AND Image.keyword:*\\rundll32.exe AND Initiated:"true") AND (NOT (DestinationIp.keyword:(10.* OR 192.168.* OR 172.16.* OR 172.17.* OR 172.18.* OR 172.19.* OR 172.20.* OR 172.21.* OR 172.22.* OR 172.23.* OR 172.24.* OR 172.25.* OR 172.26.* OR 172.27.* OR 172.28.* OR 172.29.* OR 172.30.* OR 172.31.* OR 127.*))))
+index: logstash-*
+name: cdc8da7d-c303-42f8-b08c-b4ab47230263_0
+priority: 3
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects the addition of a SSP to the registry. Upon a reboot or API call, SSP DLLs gain access to encrypted and plaintext passwords stored in Windows.
+filter:
+- query:
+    query_string:
+      query: ((EventID:"13" AND TargetObject:("HKLM\\System\\CurrentControlSet\\Control\\Lsa\\Security\ Packages" OR "HKLM\\System\\CurrentControlSet\\Control\\Lsa\\OSConfig\\Security\ Packages")) AND (NOT (Image:"C\:\\Windows\\system32\\msiexec.exe" OR Image:"C\:\\Windows\\syswow64\\MsiExec.exe")))
+index: logstash-*
+name: eeb30123-9fbd-4ee8-aaa0-2e545bbed6dc_0
+priority: 1
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects the usage and installation of a backdoor that uses an option to register a malicious debugger for built-in tools that are accessible in the login screen
+filter:
+- query:
+    query_string:
+      query: (EventID:"13" AND TargetObject.keyword:(*\\SOFTWARE\\Microsoft\\Windows\ NT\\CurrentVersion\\Image\ File\ Execution\ Options\\sethc.exe\\Debugger OR *\\SOFTWARE\\Microsoft\\Windows\ NT\\CurrentVersion\\Image\ File\ Execution\ Options\\utilman.exe\\Debugger OR *\\SOFTWARE\\Microsoft\\Windows\ NT\\CurrentVersion\\Image\ File\ Execution\ Options\\osk.exe\\Debugger OR *\\SOFTWARE\\Microsoft\\Windows\ NT\\CurrentVersion\\Image\ File\ Execution\ Options\\Magnify.exe\\Debugger OR *\\SOFTWARE\\Microsoft\\Windows\ NT\\CurrentVersion\\Image\ File\ Execution\ Options\\Narrator.exe\\Debugger OR *\\SOFTWARE\\Microsoft\\Windows\ NT\\CurrentVersion\\Image\ File\ Execution\ Options\\DisplaySwitch.exe\\Debugger) AND EventType:"SetValue")
+index: logstash-*
+name: baca5663-583c-45f9-b5dc-ea96a22ce542_0
+priority: 1
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects the usage and installation of a backdoor that uses an option to register a malicious debugger for built-in tools that are accessible in the login screen
+filter:
+- query:
+    query_string:
+      query: (ParentImage.keyword:(*\\winlogon.exe) AND CommandLine.keyword:(*cmd.exe\ sethc.exe\ * OR *cmd.exe\ utilman.exe\ * OR *cmd.exe\ osk.exe\ * OR *cmd.exe\ Magnify.exe\ * OR *cmd.exe\ Narrator.exe\ * OR *cmd.exe\ DisplaySwitch.exe\ *))
+index: logstash-*
+name: baca5663-583c-45f9-b5dc-ea96a22ce542-2_0
+priority: 1
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects the keyboard preload installation with a suspicious keyboard layout, e.g. Chinese, Iranian or Vietnamese layout load in user session on systems maintained by US staff only
+filter:
+- query:
+    query_string:
+      query: (EventID:"13" AND TargetObject.keyword:(*\\Keyboard\ Layout\\Preload\* OR *\\Keyboard\ Layout\\Substitutes\*) AND Details:("00000429" OR "00050429" OR "0000042a"))
+index: logstash-*
+name: 34aa0252-6039-40ff-951f-939fd6ce47d8_0
+priority: 3
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects the suspicious RUN keys created by software located in Download or temporary Outlook/Internet Explorer directories
+filter:
+- query:
+    query_string:
+      query: (EventID:"13" AND Image.keyword:(*\\Downloads\\* OR *\\Temporary\ Internet\ Files\\Content.Outlook\\* OR *\\Local\ Settings\\Temporary\ Internet\ Files\\*) AND TargetObject.keyword:*\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run\\*)
+index: logstash-*
+name: 9c5037d1-c568-49b3-88c7-9846a5bdc2be_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects a driver load from a temporary directory
+filter:
+- query:
+    query_string:
+      query: (EventID:"6" AND ImageLoaded.keyword:*\\Temp\\*)
+index: logstash-*
+name: 2c4523d5-d481-4ed0-8ec3-7fbf0cb41a75_0
+priority: 3
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects Executables without FileVersion,Description,Product,Company likely created with py2exe
+filter:
+- query:
+    query_string:
+      query: (Description:"\?" AND (FileVersion:"\?" OR Product:"\?" OR Company:"\?"))
+index: logstash-*
+name: 9637e8a5-7131-4f7f-bdc7-2b05d8670c43_0
+priority: 3
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects Loading of samlib.dll, WinSCard.dll from untypical process e.g. through process hollowing by Mimikatz
+filter:
+- query:
+    query_string:
+      query: (EventID:"7" AND Image.keyword:(*\\notepad.exe) AND ImageLoaded.keyword:(*\\samlib.dll OR *\\WinSCard.dll))
+index: logstash-*
+name: e32ce4f5-46c6-4c47-ba69-5de3c9193cd7_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects a method to load DLL via LSASS process using an undocumented Registry key
+filter:
+- query:
+    query_string:
+      query: (EventID:("12" OR "13") AND TargetObject.keyword:(*\\CurrentControlSet\\Services\\NTDS\\DirectoryServiceExtPt* OR *\\CurrentControlSet\\Services\\NTDS\\LsaDbExtPt*))
+index: logstash-*
+name: b3503044-60ce-4bf4-bbcb-e3db98788823_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects PowerShell remote thread creation in Rundll32.exe
+filter:
+- query:
+    query_string:
+      query: (EventID:"8" AND SourceImage.keyword:*\\powershell.exe AND TargetImage.keyword:*\\rundll32.exe)
+index: logstash-*
+name: 99b97608-3e21-4bfe-8217-2a127c396a0e_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects programs with network connections running in suspicious files system locations
+filter:
+- query:
+    query_string:
+      query: (EventID:"3" AND Image.keyword:(*\\$Recycle.bin OR *\\Users\\All\ Users\\* OR *\\Users\\Default\\* OR *\\Users\\Public\\* OR *\\Users\\Contacts\\* OR *\\Users\\Searches\\* OR C\:\\Perflogs\\* OR *\\config\\systemprofile\\* OR *\\Windows\\Fonts\\* OR *\\Windows\\IME\\* OR *\\Windows\\addins\\*))
+index: logstash-*
+name: 7b434893-c57d-4f41-908d-6a17bf1ae98f_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects Non-Standard Tools Connecting to TCP port 3389 indicating possible lateral movement
+filter:
+- query:
+    query_string:
+      query: ((EventID:"3" AND DestinationPort:"3389" AND Initiated:"true") AND (NOT (Image.keyword:(*\\mstsc.exe OR *\\RTSApp.exe OR *\\RTS2App.exe OR *\\RDCMan.exe OR *\\ws_TunnelService.exe OR *\\RSSensor.exe OR *\\RemoteDesktopManagerFree.exe OR *\\RemoteDesktopManager.exe OR *\\RemoteDesktopManager64.exe OR *\\mRemoteNG.exe OR *\\mRemote.exe OR *\\Terminals.exe OR *\\spiceworks\-finder.exe OR *\\FSDiscovery.exe OR *\\FSAssessment.exe OR *\\MobaRTE.exe OR *\\chrome.exe OR *\\thor.exe OR *\\thor64.exe))))
+index: logstash-*
+name: ed74fe75-7594-4b4b-ae38-e38e3fd2eb23_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects a possible persistence mechanism using RUN key for Windows Explorer and poiting to a suspicious folder
+filter:
+- query:
+    query_string:
+      query: (EventID:"13" AND TargetObject.keyword:*\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer\\Run AND Details.keyword:(C\:\\Windows\\Temp\\* OR C\:\\ProgramData\\* OR *\\AppData\\* OR C\:\\$Recycle.bin\\* OR C\:\\Temp\\* OR C\:\\Users\\Public\\* OR C\:\\Users\\Default\\*))
+index: logstash-*
+name: b7916c2a-fa2f-4795-9477-32b731f70f11_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects suspicious new RUN key element pointing to an executable in a suspicious folder
+filter:
+- query:
+    query_string:
+      query: (EventID:"13" AND TargetObject.keyword:(*\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run\\* OR *\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce\\*) AND Details.keyword:(*C\:\\Windows\\Temp\\* OR *\\AppData\\* OR %AppData%\\* OR *C\:\\$Recycle.bin\\* OR *C\:\\Temp\\* OR *C\:\\Users\\Public\\* OR %Public%\\* OR *C\:\\Users\\Default\\* OR *C\:\\Users\\Desktop\\* OR wscript* OR cscript*))
+index: logstash-*
+name: 02ee49e2-e294-4d0f-9278-f5b3212fc588_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects DLL's Loaded Via Word Containing VBA Macros Executing WMI Commands
+filter:
+- query:
+    query_string:
+      query: (EventID:"7" AND Image.keyword:(*\\winword.exe OR *\\powerpnt.exe OR *\\excel.exe OR *\\outlook.exe) AND ImageLoaded.keyword:(*\\wmiutils.dll OR *\\wbemcomn.dll OR *\\wbemprox.dll OR *\\wbemdisp.dll OR *\\wbemsvc.dll))
+index: logstash-*
+name: a457f232-7df9-491d-898f-b5aabd2cbe2f_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: IKEEXT and SessionEnv service, as they call LoadLibrary on files that do not exist within C:\Windows\System32\ by default. An attacker can place their malicious logic within the PROCESS_ATTACH block of their library and restart the aforementioned services "svchost.exe -k netsvcs" to gain code execution on a remote machine.
+filter:
+- query:
+    query_string:
+      query: ((EventID:"7" AND Image.keyword:(*\\svchost.exe) AND ImageLoaded.keyword:(*\\tsmsisrv.dll OR *\\tsvipsrv.dll OR *\\wlbsctrl.dll)) AND (NOT (EventID:"7" AND Image.keyword:(*\\svchost.exe) AND ImageLoaded:("C\:\\Windows\\WinSxS\*"))))
+index: logstash-*
+name: 602a1f13-c640-4d73-b053-be9a2fa58b77_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects the usage of Sysinternals Tools due to accepteula key being added to Registry
+filter:
+- query:
+    query_string:
+      query: (EventID:"13" AND TargetObject.keyword:*\\EulaAccepted)
+index: logstash-*
+name: 25ffa65d-76d8-4da5-a832-3f2b0136e133_0
+priority: 4
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects the usage of Sysinternals Tools due to accepteula key being added to Registry
+filter:
+- query:
+    query_string:
+      query: CommandLine.keyword:*\ \-accepteula*
+index: logstash-*
+name: 25ffa65d-76d8-4da5-a832-3f2b0136e133-2_0
+priority: 4
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects the usage of tsclient share to place a backdoor on the RDP source machine's startup folder
+filter:
+- query:
+    query_string:
+      query: (EventID:"11" AND Image.keyword:*\\mstsc.exe AND TargetFileName.keyword:*\\Microsoft\\Windows\\Start\ Menu\\Programs\\Startup\\*)
+index: logstash-*
+name: 52753ea4-b3a0-4365-910d-36cff487b789_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects UAC bypass method using Windows event viewer
+filter:
+- query:
+    query_string:
+      query: ((EventID:"13" AND TargetObject.keyword:HKEY_USERS\\*\\mscfile\\shell\\open\\command) OR ((EventID:"1" AND ParentImage.keyword:*\\eventvwr.exe) AND (NOT (Image.keyword:*\\mmc.exe))))
+index: logstash-*
+name: 7c81fec3-1c1d-43b0-996a-46753041b1b6_0
+priority: 1
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects changes to HKCU:\Software\Classes\exefile\shell\runas\command\isolatedCommand
+filter:
+- query:
+    query_string:
+      query: (EventID:"13" AND TargetObject.keyword:HKEY_USERS\\*\\Classes\\exefile\\shell\\runas\\command\\isolatedCommand)
+index: logstash-*
+name: 5b872a46-3b90-45c1-8419-f675db8053aa_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Posible webshell file creation on a static web site
+filter:
+- query:
+    query_string:
+      query: (EventID:"11" AND ((TargetFilename.keyword:*\\inetpub\\wwwroot\* AND TargetFilename.keyword:(*.asp* OR *.ashx* OR *.ph*)) OR (TargetFilename.keyword:(*\\www\* OR *\\htdocs\* OR *\\html\*) AND TargetFilename.keyword:*.ph*) OR (TargetFilename.keyword:*\* AND TargetFilename.keyword:*.jsp*) OR (TargetFilename.keyword:*\\cgi\-bin\* AND TargetFilename.keyword:*.pl*)))
+index: logstash-*
+name: 39f1f9f2-9636-45de-98f6-a4046aa8e4b9_0
+priority: 1
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects an executable in the Windows folder accessing github.com
+filter:
+- query:
+    query_string:
+      query: (EventID:"3" AND Initiated:"true" AND DestinationHostname.keyword:(*.github.com OR *.githubusercontent.com) AND Image.keyword:C\:\\Windows\\*)
+index: logstash-*
+name: 635dbb88-67b3-4b41-9ea5-a3af2dd88153_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects an executable in the Windows folder accessing suspicious domains
+filter:
+- query:
+    query_string:
+      query: (EventID:"3" AND Initiated:"true" AND DestinationHostname.keyword:(*dl.dropboxusercontent.com OR *.pastebin.com OR *.githubusercontent.com) AND Image.keyword:C\:\\Windows\\*)
+index: logstash-*
+name: e0f8ab85-0ac9-423b-a73a-81b3c7b1aa97_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects persistence registry keys
+filter:
+- query:
+    query_string:
+      query: (EventID:"13" AND TargetObject.keyword:(*\\SOFTWARE\\Microsoft\\Windows\ NT\\CurrentVersion\\Image\ File\ Execution\ Options\\*\\GlobalFlag OR *\\SOFTWARE\\Microsoft\\Windows\ NT\\CurrentVersion\\SilentProcessExit\\*\\ReportingMode OR *\\SOFTWARE\\Microsoft\\Windows\ NT\\CurrentVersion\\SilentProcessExit\\*\\MonitorProcess) AND EventType:"SetValue")
+index: logstash-*
+name: 36803969-5421-41ec-b92f-8500f79c23b0_0
+priority: 1
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects creation of WMI event subscription persistence method
+filter:
+- query:
+    query_string:
+      query: EventID:("19" OR "20" OR "21")
+index: logstash-*
+name: 0f06a3a5-6a09-413f-8743-e6cf35561297_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects WMI command line event consumers
+filter:
+- query:
+    query_string:
+      query: (EventID:"7" AND Image:"C\:\\Windows\\System32\\wbem\\WmiPrvSE.exe" AND ImageLoaded:"wbemcons.dll")
+index: logstash-*
+name: 05936ce2-ee05-4dae-9d03-9a391cf2d2c6_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects file writes of WMI script event consumer
+filter:
+- query:
+    query_string:
+      query: (EventID:"11" AND Image:"C\:\\WINDOWS\\system32\\wbem\\scrcons.exe")
+index: logstash-*
+name: 33f41cdd-35ac-4ba8-814b-c6a4244a1ad4_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects suspicious scripting in WMI Event Consumers
+filter:
+- query:
+    query_string:
+      query: (EventID:"20" AND Destination.keyword:(*new\-object\ system.net.webclient\).downloadstring\(* OR *new\-object\ system.net.webclient\).downloadfile\(* OR *new\-object\ net.webclient\).downloadstring\(* OR *new\-object\ net.webclient\).downloadfile\(* OR *\ iex\(* OR *WScript.shell* OR *\ \-nop\ * OR *\ \-noprofile\ * OR *\ \-decode\ * OR *\ \-enc\ *))
+index: logstash-*
+name: fe21810c-2a8c-478f-8dd3-5a287fb2a0e0_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+

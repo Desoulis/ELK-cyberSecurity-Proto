@@ -1,0 +1,212 @@
+alert:
+- debug
+description: An adversary may compress data (e.g., sensitive documents) that is collected prior to exfiltration in order to make it portable and minimize the amount of data sent over the network
+filter:
+- query:
+    query_string:
+      query: (EventID:"4104" AND keywords.keyword:*\-Recurse* AND keywords.keyword:*|* AND keywords.keyword:*Compress\-Archive*)
+index: access*
+name: 6dc5d284-69ea-42cf-9311-fb1c3932a69a_0
+priority: 4
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects PowerShell downgrade attack by comparing the host versions with the actually used engine version 2.0
+filter:
+- query:
+    query_string:
+      query: ((EventID:"400" AND EngineVersion.keyword:2.*) AND (NOT (HostVersion.keyword:2.*)))
+index: access*
+name: 6331d09b-4785-4c13-980f-f96661356249_0
+priority: 3
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects PowerShell called from an executable by the version mismatch method
+filter:
+- query:
+    query_string:
+      query: (EventID:"400" AND EngineVersion.keyword:(2.* OR 4.* OR 5.*) AND HostVersion.keyword:3.*)
+index: access*
+name: c70e019b-1479-4b65-b0cc-cd0c6093a599_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects Commandlet names from well-known PowerShell exploitation frameworks
+filter:
+- query:
+    query_string:
+      query: (Message.keyword:(*Invoke\-DllInjection* OR *Invoke\-Shellcode* OR *Invoke\-WmiCommand* OR *Get\-GPPPassword* OR *Get\-Keystrokes* OR *Get\-TimedScreenshot* OR *Get\-VaultCredential* OR *Invoke\-CredentialInjection* OR *Invoke\-Mimikatz* OR *Invoke\-NinjaCopy* OR *Invoke\-TokenManipulation* OR *Out\-Minidump* OR *VolumeShadowCopyTools* OR *Invoke\-ReflectivePEInjection* OR *Invoke\-UserHunter* OR *Find\-GPOLocation* OR *Invoke\-ACLScanner* OR *Invoke\-DowngradeAccount* OR *Get\-ServiceUnquoted* OR *Get\-ServiceFilePermission* OR *Get\-ServicePermission* OR *Invoke\-ServiceAbuse* OR *Install\-ServiceBinary* OR *Get\-RegAutoLogon* OR *Get\-VulnAutoRun* OR *Get\-VulnSchTask* OR *Get\-UnattendedInstallFile* OR *Get\-ApplicationHost* OR *Get\-RegAlwaysInstallElevated* OR *Get\-Unconstrained* OR *Add\-RegBackdoor* OR *Add\-ScrnSaveBackdoor* OR *Gupt\-Backdoor* OR *Invoke\-ADSBackdoor* OR *Enabled\-DuplicateToken* OR *Invoke\-PsUaCme* OR *Remove\-Update* OR *Check\-VM* OR *Get\-LSASecret* OR *Get\-PassHashes* OR *Show\-TargetScreen* OR *Port\-Scan* OR *Invoke\-PoshRatHttp* OR *Invoke\-PowerShellTCP* OR *Invoke\-PowerShellWMI* OR *Add\-Exfiltration* OR *Add\-Persistence* OR *Do\-Exfiltration* OR *Start\-CaptureServer* OR *Get\-ChromeDump* OR *Get\-ClipboardContents* OR *Get\-FoxDump* OR *Get\-IndexedItem* OR *Get\-Screenshot* OR *Invoke\-Inveigh* OR *Invoke\-NetRipper* OR *Invoke\-EgressCheck* OR *Invoke\-PostExfil* OR *Invoke\-PSInject* OR *Invoke\-RunAs* OR *MailRaider* OR *New\-HoneyHash* OR *Set\-MacAttribute* OR *Invoke\-DCSync* OR *Invoke\-PowerDump* OR *Exploit\-Jboss* OR *Invoke\-ThunderStruck* OR *Invoke\-VoiceTroll* OR *Set\-Wallpaper* OR *Invoke\-InveighRelay* OR *Invoke\-PsExec* OR *Invoke\-SSHCommand* OR *Get\-SecurityPackages* OR *Install\-SSP* OR *Invoke\-BackdoorLNK* OR *PowerBreach* OR *Get\-SiteListPassword* OR *Get\-System* OR *Invoke\-BypassUAC* OR *Invoke\-Tater* OR *Invoke\-WScriptBypassUAC* OR *PowerUp* OR *PowerView* OR *Get\-RickAstley* OR *Find\-Fruit* OR *HTTP\-Login* OR *Find\-TrustedDocuments* OR *Invoke\-Paranoia* OR *Invoke\-WinEnum* OR *Invoke\-ARPScan* OR *Invoke\-PortScan* OR *Invoke\-ReverseDNSLookup* OR *Invoke\-SMBScanner* OR *Invoke\-Mimikittenz* OR *Invoke\-AllChecks*) AND (NOT \*.keyword:(*Get\-SystemDriveInfo*)))
+index: access*
+name: 89819aa4-bbd6-46bc-88ec-c7f7fe30efa6_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects keywords from well-known PowerShell exploitation frameworks
+filter:
+- query:
+    query_string:
+      query: Message.keyword:(*AdjustTokenPrivileges* OR *IMAGE_NT_OPTIONAL_HDR64_MAGIC* OR *Microsoft.Win32.UnsafeNativeMethods* OR *ReadProcessMemory.Invoke* OR *SE_PRIVILEGE_ENABLED* OR *LSA_UNICODE_STRING* OR *MiniDumpWriteDump* OR *PAGE_EXECUTE_READ* OR *SECURITY_DELEGATION* OR *TOKEN_ADJUST_PRIVILEGES* OR *TOKEN_ALL_ACCESS* OR *TOKEN_ASSIGN_PRIMARY* OR *TOKEN_DUPLICATE* OR *TOKEN_ELEVATION* OR *TOKEN_IMPERSONATE* OR *TOKEN_INFORMATION_CLASS* OR *TOKEN_PRIVILEGES* OR *TOKEN_QUERY* OR *Metasploit* OR *Mimikatz*)
+index: access*
+name: f62176f3-8128-4faa-bf6c-83261322e5eb_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects Commandlet names and arguments from the Nishang exploitation framework
+filter:
+- query:
+    query_string:
+      query: \*.keyword:(*Add\-ConstrainedDelegationBackdoor* OR *Set\-DCShadowPermissions* OR *DNS_TXT_Pwnage* OR *Execute\-OnTime* OR *HTTP\-Backdoor* OR *Set\-RemotePSRemoting* OR *Set\-RemoteWMI* OR *Invoke\-AmsiBypass* OR *Out\-CHM* OR *Out\-HTA* OR *Out\-SCF* OR *Out\-SCT* OR *Out\-Shortcut* OR *Out\-WebQuery* OR *Out\-Word* OR *Enable\-Duplication* OR *Remove\-Update* OR *Download\-Execute\-PS* OR *Download_Execute* OR *Execute\-Command\-MSSQL* OR *Execute\-DNSTXT\-Code* OR *Out\-RundllCommand* OR *Copy\-VSS* OR *FireBuster* OR *FireListener* OR *Get\-Information* OR *Get\-PassHints* OR *Get\-WLAN\-Keys* OR *Get\-Web\-Credentials* OR *Invoke\-CredentialsPhish* OR *Invoke\-MimikatzWDigestDowngrade* OR *Invoke\-SSIDExfil* OR *Invoke\-SessionGopher* OR *Keylogger* OR *Invoke\-Interceptor* OR *Create\-MultipleSessions* OR *Invoke\-NetworkRelay* OR *Run\-EXEonRemote* OR *Invoke\-Prasadhak* OR *Invoke\-BruteForce* OR *Password\-List* OR *Invoke\-JSRatRegsvr* OR *Invoke\-JSRatRundll* OR *Invoke\-PoshRatHttps* OR *Invoke\-PowerShellIcmp* OR *Invoke\-PowerShellUdp* OR *Invoke\-PSGcat* OR *Invoke\-PsGcatAgent* OR *Remove\-PoshRat* OR *Add\-Persistance* OR *ExetoText* OR *Invoke\-Decode* OR *Invoke\-Encode* OR *Parse_Keys* OR *Remove\-Persistence* OR *StringtoBase64* OR *TexttoExe* OR *Powerpreter* OR *Nishang* OR *EncodedData* OR *DataToEncode* OR *LoggedKeys* OR *OUT\-DNSTXT* OR *Jitter* OR *ExfilOption* OR *Tamper* OR *DumpCerts* OR *DumpCreds* OR *Shellcode32* OR *Shellcode64* OR *NotAllNameSpaces* OR *exfill* OR *FakeDC* OR *Exploit*)
+index: access*
+name: f772cee9-b7c2-4cb2-8f07-49870adc02e0_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects writing data into NTFS alternate data streams from powershell. Needs Script Block Logging.
+filter:
+- query:
+    query_string:
+      query: \*.keyword:(*set\-content* AND *\-stream*)
+index: access*
+name: 8c521530-5169-495d-a199-0a3a881ad24e_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects PowerShell calling a credential prompt
+filter:
+- query:
+    query_string:
+      query: (EventID:"4104" AND Message.keyword:(*PromptForCredential*))
+index: access*
+name: ca8b77a9-d499-4095-b793-5d5f330d450e_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects the use of PSAttack PowerShell hack tool
+filter:
+- query:
+    query_string:
+      query: (EventID:"4103" AND "PS\ ATTACK\!\!\!")
+index: access*
+name: b7ec41a4-042c-4f31-a5db-d0fcde9fa5c5_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects Base64 encoded Shellcode
+filter:
+- query:
+    query_string:
+      query: ((EventID:"4104" AND "*AAAAYInlM*") AND \*.keyword:(*OiCAAAAYInlM* OR *OiJAAAAYInlM*))
+index: access*
+name: 16b37b70-6fcf-4814-a092-c36bd3aafcbd_0
+priority: 1
+realert:
+  minutes: 0
+type: any
+
+alert:
+- "slack"
+slack:
+slack_webhook_url: "https://hooks.slack.com/services/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"
+description: Detects suspicious PowerShell download command
+filter:
+- query:
+    query_string:
+      query: Message.keyword:(*System.Net.WebClient\).DownloadString\(* OR *system.net.webclient\).downloadfile\(*)
+index: access*
+name: 65531a81-a694-4e31-ae04-f8ba5bc33759_0
+priority: 3
+realert:
+  minutes: 0
+type: any
+
+
+alert:
+- debug
+description: Detects suspicious PowerShell invocation command parameters
+filter:
+- query:
+    query_string:
+      query: (\*.keyword:(*\ \-enc\ * OR *\ \-EncodedCommand\ *) AND \*.keyword:(*\ \-w\ hidden\ * OR *\ \-window\ hidden\ * OR *\ \-\ windowstyle\ hidden\ *) AND \*.keyword:(*\ \-noni\ * OR *\ \-noninteractive\ *))
+index: access*
+name: 3d304fda-78aa-43ed-975c-d740798a49c1_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects suspicious PowerShell invocation command parameters
+filter:
+- query:
+    query_string:
+      query: Message.keyword:(*\ \-nop\ \-w\ hidden\ \-c\ *\ \[Convert\]\:\:FromBase64String* OR *\ \-w\ hidden\ \-noni\ \-nop\ \-c\ \"iex\(New\-Object* OR *\ \-w\ hidden\ \-ep\ bypass\ \-Enc* OR *powershell.exe\ reg\ add\ HKCU\\software\\microsoft\\windows\\currentversion\\run* OR *bypass\ \-noprofile\ \-windowstyle\ hidden\ \(new\-object\ system.net.webclient\).download* OR *iex\(New\-Object\ Net.WebClient\).Download*)
+index: access*
+name: fce5f582-cc00-41e1-941a-c6fabf0fdb8c_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Detects keywords that could indicate the use of some PowerShell exploitation framework
+filter:
+- query:
+    query_string:
+      query: Message.keyword:(*\[System.Reflection.Assembly\]\:\:Load*)
+index: access*
+name: 1f49f2ab-26bc-48b3-96cc-dcffbc93eadf_0
+priority: 2
+realert:
+  minutes: 0
+type: any
+
+alert:
+- debug
+description: Winlogon.exe is a Windows component responsible for actions at logon/logoff as well as the secure attention sequence (SAS) triggered by Ctrl-Alt-Delete. Registry entries in HKLM\Software[Wow6432Node]Microsoft\Windows NT\CurrentVersion\Winlogon\ and HKCU\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\ are used to manage additional helper programs and functionalities that support Winlogon. Malicious modifications to these Registry keys may cause Winlogon to load and execute malicious DLLs and/or executables.
+filter:
+- query:
+    query_string:
+      query: (EventID:"4104" AND \*.keyword:(*Set\-ItemProperty* OR *New\-Item*) AND "*CurrentVersion\\Winlogon*")
+index: access*
+name: 851c506b-6b7c-4ce2-8802-c703009d03c0_0
+priority: 3
+realert:
+  minutes: 0
+type: any
